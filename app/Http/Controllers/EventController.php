@@ -10,6 +10,7 @@ use App\Http\Requests\StoreEventRequest;
 // use App\Http\Resources\EventResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -95,6 +96,29 @@ class EventController extends Controller
             'status' => true,
             'message' => 'Event found Successfully',
             'data' => $event
+        ], 200);
+    }
+
+    public function instance(Request $request){
+    
+        $newStart = Carbon::parse($request->input('from'));
+        $newEnd = Carbon::parse($request->input('to'));
+        $invitees = $request->invitees;
+        
+
+        $events = Event::where(function ($query) use ($newStart, $newEnd) {
+            $query->whereBetween('startDateTime', [$newStart, $newEnd]) 
+                  ->orWhereBetween('endDateTime',[$newStart, $newEnd])
+                  ->orWhere(function($query) use ($newStart, $newEnd) {
+                        $query->where('startDateTime', '<=', $newStart)
+                              ->where('endDateTime', '>=', $newEnd);
+                  });
+        })->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Event found Successfully',
+            'data' => $events
         ], 200);
     }
 

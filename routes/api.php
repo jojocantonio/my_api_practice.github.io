@@ -14,5 +14,6 @@ use App\Http\Controllers\UserController;
 Route::post('/events', [EventController::class, 'store']);
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/events/{id}', [EventController::class, 'show']);
+Route::get('/events', [EventController::class, 'instance']);
 
 Route::get('/users', [UserController::class,'index']);
