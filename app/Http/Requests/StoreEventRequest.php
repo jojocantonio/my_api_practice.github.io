@@ -65,28 +65,6 @@ class StoreEventRequest extends FormRequest
         ];
     }
 
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // Custom logic for Weekly frequency validation
-            if ($this->frequency === 'Weekly') {
-                if (is_null($this->duration)) {
-                    $validator->errors()->add('duration', 'For Weekly events, duration is required.');
-                }
-            }
-
-            // Custom logic for Monthly frequency validation
-            if ($this->frequency === 'Monthly') {
-                $startDate = Carbon::parse($this->startDateTime)->format('Y-m-d H:i');
-                $dayOfMonth = Carbon::parse($startDate)->format('d');
-                $monthValidLastDay = Carbon::parse($startDate)->endOfMonth()->format('d');
-                
-                if ($dayOfMonth > $monthValidLastDay) {
-                    $validator->errors()->add('startDateTime', 'Invalid day of month for Monthly event, adjusted to the last day of the month.');
-                }
-            }
-        });
-    }
 
     /**
      * Query the database to check for overlapping events.

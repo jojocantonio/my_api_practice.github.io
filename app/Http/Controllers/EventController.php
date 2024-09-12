@@ -26,8 +26,7 @@ class EventController extends Controller
             'message' => 'Events retrieved successfully',
             'data' => $events
         ], 200);
-
-        // return ResponseClass::sendResponse(EventResource::collection($data). '',200); 
+ 
     }
 
     /**
